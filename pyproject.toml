@@ -3,14 +3,14 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "your_project_name"
-version = "0.0.1"
+name = "tlv_data"
+version = "1.0.0"
 authors = [
-  { name="Example Author", email="author@example.com" },
+  { name="Minkyu Choi", email="minkyu.choi@utexas.edu" },
 ]
-description = "A small example package"
+description = "Temporal Logic Video (TLV) Dataset"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -40,9 +40,9 @@ select = [
   "D",   # pydocstyle
 ]
 
-[tool.ruff.pydocstyle]
-convention = "google"
-
 ignore = ["ANN101", "ANN102"]
 
 extend-exclude = [".venv", "venv", "vscode"]
+
+[tool.ruff.pydocstyle]
+convention = "google"
