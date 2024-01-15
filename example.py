@@ -1,7 +1,6 @@
-def main():
-    """Provide example code to run your code / application."""
-    print("You're all set")
+import os
 
+# Get the name of the current file/script
+script_name = os.path.basename(__file__)
 
-if __name__ == "__main__":
-    main()
+print(script_name)

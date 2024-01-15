@@ -19,7 +19,7 @@ MAPPER_METADATA = {
     "vehicle.construction": "car",  # Broadly categorizing as 'truck'
     "vehicle.emergency.ambulance": "car",  # Or 'car', depending on size/shape
     "vehicle.emergency.police": "car",
-    "vehicle.motorcycle": "motorcycle",
+    "vehicle.motorcycle": "bicycle",
     "vehicle.trailer": "truck",
     "vehicle.truck": "truck",
     # Additional mappings for other labels

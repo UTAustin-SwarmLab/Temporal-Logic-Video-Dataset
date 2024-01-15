@@ -13,7 +13,9 @@ class COCOImageLoader(TLVImageLoader):
     """Load COCO image data."""
 
     def __init__(
-        self, coco_dir_path: str, annotation_file: str, image_dir: str
+        self,
+        coco_root_dir_path: str,
+        coco_image_source: str,
     ):
         """Load COCO image data from file.
 
@@ -23,7 +25,15 @@ class COCOImageLoader(TLVImageLoader):
         - image_dir (str): Name of the image directory.
         """
         self.name = "COCO"
-        self._coco_dir_path = Path(coco_dir_path)
+        self._coco_dir_path = Path(coco_root_dir_path)
+
+        if coco_image_source == "train":
+            annotation_file = "annotations/instances_train2017.json"
+            image_dir = "train2017"
+        elif coco_image_source == "val":
+            annotation_file = "annotations/instances_val2017.json"
+            image_dir = "val2017"
+
         self._annotation_file = self._coco_dir_path / annotation_file
         self._image_dir = self._coco_dir_path / image_dir
         self._coco = COCO(self._annotation_file)
@@ -47,12 +57,10 @@ class COCOImageLoader(TLVImageLoader):
         """
         img_ids = self._coco.getImgIds()
         images = [
-            self._image_dir / self._coco.loadImgs(id)[0]["file_name"]
-            for id in img_ids
+            self._image_dir / self._coco.loadImgs(id)[0]["file_name"] for id in img_ids
         ]
         annotations = [
-            self._coco.loadAnns(self._coco.getAnnIds(imgIds=id))
-            for id in img_ids
+            self._coco.loadAnns(self._coco.getAnnIds(imgIds=id)) for id in img_ids
         ]
 
         return images, annotations
@@ -68,27 +76,24 @@ class COCOImageLoader(TLVImageLoader):
         for id in img_ids:
             images.append(
                 cv2.imread(
-                    str(
-                        self._image_dir
-                        / self._coco.loadImgs(id)[0]["file_name"]
-                    )
+                    str(self._image_dir / self._coco.loadImgs(id)[0]["file_name"])
                 )[:, :, ::-1]
             )  # Read it as RGB
             annotation = self._coco.loadAnns(self._coco.getAnnIds(imgIds=id))
             labels_per_image = []
             for i in range(len(annotation)):
                 labels_per_image.append(
-                    self._coco.cats[annotation[i]["category_id"]][
-                        "name"
-                    ].replace(" ", "_")
+                    self._coco.cats[annotation[i]["category_id"]]["name"].replace(
+                        " ", "_"
+                    )
                 )
             unique_labels = list(set(labels_per_image))
             if len(unique_labels) == 0:
                 images.pop()
             else:
                 val = []
-                for l in list(set(labels_per_image)):
-                    if l not in self.class_labels:
+                for _label in list(set(labels_per_image)):
+                    if _label not in self.class_labels:
                         val.append(False)
                 if False in val:
                     images.pop()
@@ -121,6 +126,9 @@ class COCOImageLoader(TLVImageLoader):
         plt.axis("off")
         self._coco.showAnns(anns)
         plt.show()
+
+    def map_data(self, **kwargs) -> any:
+        return super().map_data(**kwargs)
 
 
 # # Example usage:

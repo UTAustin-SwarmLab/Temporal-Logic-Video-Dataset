@@ -8,9 +8,12 @@ import numpy as np
 from torch.utils.data import Dataset
 
 from tlv_dataset.data import TLVRawImageDataset
+from tlv_dataset.label_mapper.mapper_utils import get_mapper_metadata
 
 from ._base import TLVImageLoader
-from .meta_to_imagenet import META_TO_IMAGENET, filter
+
+# from .meta_to_imagenet import META_TO_IMAGENET, filter
+MAPPER_METADATA = None
 
 
 class ImageNetDS(Dataset):
@@ -33,7 +36,7 @@ class ImageNetDS(Dataset):
         type: str = "train",
         batch_id: int | str = 1,
         target_size: tuple = (224, 224, 3),
-        map_to_cocometa: bool = False,
+        is_mapping: bool = False,
     ):
         """Load ImageNet dataset from file."""
         self.imagenet_path = imagenet_dir_path
@@ -78,9 +81,9 @@ class ImageNetDS(Dataset):
             )
         )
 
-        self.map_to_cocometa = map_to_cocometa
+        self.is_mapping = is_mapping
 
-        if self.map_to_cocometa:
+        if self.is_mapping:
             # Mapped dataset with respect to COCO metaclasses
             self.map_data()
             print(
@@ -91,49 +94,15 @@ class ImageNetDS(Dataset):
                 )
             )
 
-    @property
-    def class_counts(self):
-        if self.map_to_cocometa:
-            return self._num_images_per_metaclass
-        elif self._num_images_per_class:
-            # remap keys to classnames
-            return {
-                self.class_mapping_dict[k]: v
-                for k, v in self._num_images_per_class.items()
-            }
-
-    def map_data(self):
-        """Map data meta data on to the imagenet classes."""
-        filtered_meta_data = filter(
-            META_TO_IMAGENET, self.imagenet_path + "/LOC_synset_mapping.txt"
-        )
-
-        self.metaclass_imagenetclass = filtered_meta_data
-        self.imagenetclass_metaclass = {}
-        self.length_dataset = 0
-        self._num_images_per_metaclass = {}
-        for key, val in self.metaclass_imagenetclass.items():
-            num_images = 0
-            for v in val:
-                v_id = self.classname_classid[v][0]
-                self.imagenetclass_metaclass[v] = key
-                self.length_dataset += self._num_images_per_class[v_id]
-                num_images += self._num_images_per_class[v_id]
-
-            self._num_images_per_metaclass[key] = num_images
-        # From the mapped data evalaute the length of the dataset
-
     def __getitem__(self, index):
         """Get item from dataset."""
         index_copy = index
-        if not self.map_to_cocometa:
+        if not self.is_mapping:
             # Find the class ID where the index is located
             class_id = 0
             while (
                 index
-                >= self._num_images_per_class[
-                    self.mapping_number_to_class[class_id]
-                ]
+                >= self._num_images_per_class[self.mapping_number_to_class[class_id]]
             ):
                 index -= self._num_images_per_class[
                     self.mapping_number_to_class[class_id]
@@ -154,21 +123,15 @@ class ImageNetDS(Dataset):
         else:
             # Obtain the metaclass where the index is located
             metaclass_id = 0
-            metaclassname = list(self.metaclass_imagenetclass.keys())[
-                metaclass_id
-            ]
+            metaclassname = list(self.metaclass_imagenetclass.keys())[metaclass_id]
             cum_count = 0
             while index >= self._num_images_per_metaclass[metaclassname]:
                 index -= self._num_images_per_metaclass[metaclassname]
                 cum_count += self._num_images_per_metaclass[metaclassname]
                 metaclass_id += 1
-                metaclassname = list(self.metaclass_imagenetclass.keys())[
-                    metaclass_id
-                ]
+                metaclassname = list(self.metaclass_imagenetclass.keys())[metaclass_id]
 
-            imagenet_class_for_metaclass = self.metaclass_imagenetclass[
-                metaclassname
-            ]
+            imagenet_class_for_metaclass = self.metaclass_imagenetclass[metaclassname]
             index = index_copy - cum_count
 
             class_id_val = 0
@@ -213,9 +176,49 @@ class ImageNetDS(Dataset):
         """Get the class name from the class ID."""
         return self.class_mapping_dict[id]
 
+    def filter(self, meta_to_imagenet: dict, imagenet_path: str) -> dict:
+        """
+        Returns the filtered META_TO_IMAGENET dictionary
+        """
+
+        classes = set()
+        for j, line in enumerate(open(imagenet_path)):
+            cs = line[9:].strip().split(", ")[0]
+            cs = cs.replace(" ", "_")
+            classes.add(cs)
+        filtered_meta_to_imagenet = dict()
+        for k in meta_to_imagenet.keys():
+            filtered_meta_to_imagenet[k] = []
+            for v in meta_to_imagenet[k]:
+                if v in classes:
+                    filtered_meta_to_imagenet[k].append(v)
+
+        return filtered_meta_to_imagenet
+
+    def map_data(self):
+        """Map data meta data on to the imagenet classes."""
+        filtered_meta_data = self.filter(
+            MAPPER_METADATA, self.imagenet_path + "/LOC_synset_mapping.txt"
+        )
+
+        self.metaclass_imagenetclass = filtered_meta_data
+        self.imagenetclass_metaclass = {}
+        self.length_dataset = 0
+        self._num_images_per_metaclass = {}
+        for key, val in self.metaclass_imagenetclass.items():
+            num_images = 0
+            for v in val:
+                v_id = self.classname_classid[v][0]
+                self.imagenetclass_metaclass[v] = key
+                self.length_dataset += self._num_images_per_class[v_id]
+                num_images += self._num_images_per_class[v_id]
+
+            self._num_images_per_metaclass[key] = num_images
+        # From the mapped data evalaute the length of the dataset
+
     @property
     def classnames(self):
-        if self.map_to_cocometa:
+        if self.is_mapping:
             keys = []
             for k, v in self._num_images_per_metaclass.items():
                 if v != 0:
@@ -224,6 +227,17 @@ class ImageNetDS(Dataset):
         else:
             return list(self.class_mapping_dict.keys())
 
+    @property
+    def class_counts(self):
+        if self.is_mapping:
+            return self._num_images_per_metaclass
+        elif self._num_images_per_class:
+            # remap keys to classnames
+            return {
+                self.class_mapping_dict[k]: v
+                for k, v in self._num_images_per_class.items()
+            }
+
 
 class ImageNetDataloader(TLVImageLoader):
     """Load ImageNet dataset from file."""
@@ -231,17 +245,26 @@ class ImageNetDataloader(TLVImageLoader):
     def __init__(
         self,
         imagenet_dir_path: str,
+        mapping_to: str = "coco",
         batch_id: int | str = 1,
     ):
         """Load ImageNet dataset from file."""
         # Create an imagenet dataset
         self.name = "ImageNet2017-1K"
-        self.imagenet = ImageNetDS(imagenet_dir_path, map_to_cocometa=True)
+        if mapping_to is not None:
+            global MAPPER_METADATA
+            MAPPER_METADATA = get_mapper_metadata(
+                loader_name=os.path.basename(__file__), mapping_to=mapping_to
+            )
+            is_mapping = True
+
+        else:
+            is_mapping = False
+
+        self.imagenet = ImageNetDS(imagenet_dir_path, is_mapping=is_mapping)
         # Get text labels from metadata
         self.class_labels = list(self.imagenet.classnames)
-        self.data: TLVRawImageDataset = self.process_data(
-            raw_data=self.load_data()
-        )
+        self.data: TLVRawImageDataset = self.process_data(raw_data=self.load_data())
 
     def load_data(self) -> dict:
         """Load the labels of the data
@@ -251,13 +274,11 @@ class ImageNetDataloader(TLVImageLoader):
         labels = [0 for _ in range(len(self.imagenet))]
         mapped_labels = [0 for _ in range(len(self.imagenet))]
         cum_count = 0
-        for idx, (class_, count) in enumerate(
-            self.imagenet.class_counts.items()
-        ):
+        for idx, (class_, count) in enumerate(self.imagenet.class_counts.items()):
             cum_count += count
             for j in range(cum_count - count, cum_count):
                 labels[j] = idx
-                mapped_labels[j] = class_
+                mapped_labels[j] = [class_]
 
         data = {"dataset": self.imagenet, "labels": mapped_labels}
         return data
@@ -269,6 +290,10 @@ class ImageNetDataloader(TLVImageLoader):
             labels=raw_data["labels"],
             images=raw_data["dataset"],
         )
+
+    def map_data(self, **kwargs) -> any:
+        """Map data function is called from dataset class."""
+        pass
 
 
 if __name__ == "__main__":

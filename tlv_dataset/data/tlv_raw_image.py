@@ -1,15 +1,9 @@
 import dataclasses  # noqa: D100
 import random
-from pathlib import Path
-from typing import Dict, List, Optional
+from typing import List
 
-import cv2
 import numpy as np
 import torch
-from PIL import Image
-
-from tlv_dataset.common.frame_grouping import combine_consecutive_lists
-from tlv_dataset.common.utility import get_file_or_dir_with_datetime
 
 
 @dataclasses.dataclass
@@ -20,9 +14,7 @@ class TLVRawImage:
     labels: List[List[str]]
     images: List[np.ndarray]
 
-    def sample_image_from_label(
-        self, labels: list, proposition: list
-    ) -> np.ndarray:
+    def sample_image_from_label(self, labels: list, proposition: list) -> np.ndarray:
         """Sample image from label."""
         image_of_frame = []
         img_to_label = {}
@@ -68,9 +60,7 @@ class TLVRawImage:
                         for i, value in enumerate(self.labels)
                         if all(prop in value for prop in label)
                     ]
-                    random_idx = random.choice(
-                        img_to_label_list[tuple(sorted(label))]
-                    )
+                    random_idx = random.choice(img_to_label_list[tuple(sorted(label))])
                     image_of_frame.append(self.images[random_idx])
             label_idx += 1
         return labels, image_of_frame
@@ -84,9 +74,7 @@ class TLVRawImageDataset:
     labels: List[List[str]]
     images: torch.utils.data.Dataset
 
-    def sample_image_from_label(
-        self, labels: list, proposition: list
-    ) -> np.ndarray:
+    def sample_image_from_label(self, labels: list, proposition: list) -> np.ndarray:
         """Sample image from label."""
         image_of_frame = []
         img_to_label = {}

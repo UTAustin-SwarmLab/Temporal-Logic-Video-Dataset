@@ -1,0 +1,12 @@
+#@markdown #### Replace this path with your own tfrecords. A tfrecord containing tf.Example protos as downloaded from the Waymo dataset webpage.
+TRAIN_DIR: '/store/datasets/waymo/training/' #@param {type:"string"}
+#@markdown #### Replace this directory with your own dataset folder for evaluation.
+EVAL_DIR: '/store/datasets/waymo/validation/' #@param {type: "string"}
+#@markdown #### Replace this directory with your own testing dataset folder.
+TEST_DIR: '//store/datasets/waymo/testing/' #@param {type: "string"}
+
+# Visualization Path
+VIZ_DIR: '../waymo_data/visualization/' #@param {type: "string"}
+NUM_CPU: 16 
+#which camera frames to save
+SAVE_FRAMES: [0,1,2] #@param {type: "LIST"}

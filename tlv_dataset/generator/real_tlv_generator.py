@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from _base import DataGenerator
 import copy
 import random
-import re
+import uuid
 from collections import Counter
 from pathlib import Path
+
+from _base import DataGenerator
 
 from tlv_dataset.common.utility import load_pickle_to_dict, save_dict_to_pickle
 from tlv_dataset.data import TLVDataset
@@ -27,12 +28,16 @@ class RealTLVGenerator(DataGenerator):
             unique_propositions (List): Unique/Rare propositions from the dataset.
                 If given, they will be used for a proposition after "until" operator.
                 e.g: non-unique U unique -> [non-unique,non-unique,non-unique,unique].
+                Otherwise, the generator will select unique propositions based on the
+                data distribution.
 
         """
         self.tlv_data_dir = tlv_data_dir
         if tlv_data_dir is not None:
             self._tlv_data_dir = Path(tlv_data_dir)
             self._tlv_file_path = list(self._data_dir.glob("*.pkl"))
+        else:
+            self._tlv_data_dir = None
         self._dataloader = dataloader
         self._unique_propositions = unique_propositions
         self._save_dir = Path(save_dir)
@@ -46,23 +51,20 @@ class RealTLVGenerator(DataGenerator):
                 benchmark_frame: TLVDataset = load_pickle_to_dict(file)
                 self.generate_ltl_ground_truth(benchmark_frame)
         else:
-            self._dataloader.loading_data(
-                generate_func=self.generate_ltl_ground_truth
-            )
+            self._dataloader.loading_data(generate_func=self.generate_ltl_ground_truth)
 
     def get_label_count(self, lst):
         output = Counter()
 
         for item in lst:
             if isinstance(item, list):
-                # If the item is a list, sort it, convert it to a tuple, and count occurrences
-                item_tuple = tuple(sorted(item))
-                output[item_tuple] += 1
+                # Count occurrences of each element in the sublist
+                for sub_item in item:
+                    output[sub_item] += 1
             else:
-                # If the item is not a list, simply count occurrences
+                # Count occurrences of the item
                 output[item] += 1
 
-        # Convert Counter object to dictionary (optional)
         return dict(output)
 
     def evaluate_unique_prop(self, unique_prop, lst):
@@ -77,13 +79,16 @@ class RealTLVGenerator(DataGenerator):
                     return False
 
     def _class_map(self, prop):
-        map_dict = {
-            "vehicle": "car",
-            "pedestrian": "person",
-            "cyclist": "bicycle",
-            "sign": "traffic_sign",
-        }
-        return map_dict[prop]
+        try:
+            map_dict = {
+                "vehicle": "car",
+                "pedestrian": "person",
+                "cyclist": "bicycle",
+                "sign": "traffic_sign",
+            }
+            return map_dict[prop]
+        except KeyError:
+            return prop
 
     def f_prop1(self, prop1: str, lst: list[list]):
         ltl_formula = f'F "{self._class_map(prop1)}"'
@@ -154,23 +159,25 @@ class RealTLVGenerator(DataGenerator):
         sorted_items = sorted(label_count.items(), key=lambda x: x[1])
         try:
             if len(sorted_items) == 3:
-                unique_prpos = [sorted_items[0][0]]  # First two unique values
+                unique_props = [sorted_items[0][0]]  # First two unique values
                 highest_count_props = [
                     sorted_items[1][0],
                     sorted_items[2][0],
                 ]  # [sorted_items[-1][0], sorted_items[-2][0]]  # First two unique values
             elif len(sorted_items) > 3:
-                unique_prpos = [sorted_items[0][0], sorted_items[1][0]]
+                unique_props = [sorted_items[0][0], sorted_items[1][0]]
                 highest_count_props = [sorted_items[2][0], sorted_items[3][0]]
             elif len(sorted_items) < 3:
-                unique_prpos = [sorted_items[0][0]]
-                highest_count_props = [sorted_items[1][0]]
-            else:
-                unique_prpos = [sorted_items[0][0]]
-                highest_count_props = [sorted_items[0][0]]
+                if len(sorted_items) == 2:
+                    unique_props = [sorted_items[0][0]]
+                    highest_count_props = [sorted_items[1][0]]
+                else:
+                    unique_props = sorted_items[0][0]
+                    highest_count_props = sorted_items[0][0]
         except IndexError:
-            unique_prop = sorted_items[0][0]
-        return unique_prop
+            unique_props = sorted_items[0][0]
+
+        return unique_props
 
     def generate_ltl_ground_truth(
         self,
@@ -182,7 +189,13 @@ class RealTLVGenerator(DataGenerator):
         if self._unique_propositions is not None:
             unique_propositions = self._unique_propositions
         else:
-            unique_propositions = self.get_unique_propositions()
+            unique_propositions = self.get_unique_propositions(
+                benchmark_frame.labels_of_frames
+            )
+        if len(benchmark_frame.proposition) == 0:
+            benchmark_frame.proposition = list(
+                self.get_label_count(benchmark_frame.labels_of_frames).keys()
+            )
 
         # Start.
         if any(
@@ -197,55 +210,15 @@ class RealTLVGenerator(DataGenerator):
                 ),
                 None,
             )
-        # F prop
-        # if unique props shows up too early, F prop
-        if self.evaluate_unique_prop(
-            unique_prop,
-            benchmark_frame.labels_of_frames[:unique_prop_threshold],
-        ):
-            ltl_formula, new_prop_set, frames_of_interest = self.f_prop1(
-                prop1=unique_prop, lst=benchmark_frame.labels_of_frames
-            )
-            self.update_and_save_benchmark_frame(
-                ltl_formula,
-                new_prop_set,
-                frames_of_interest,
-                benchmark_frame,
-                self._save_dir,
-            )
-        else:
-            # prop1 u prop2
-            label = benchmark_frame.proposition
-            (
-                ltl_formula,
-                new_prop_set,
-                frames_of_interest,
-            ) = self.prop1_u_prop2(
-                prop1=random.choice(label.pop(label.index(unique_prop))),
-                prop2=unique_prop,
-                lst=benchmark_frame.labels_of_frames,
-            )
-            self.update_and_save_benchmark_frame(
-                ltl_formula,
-                new_prop_set,
-                frames_of_interest,
-                benchmark_frame,
-                self._save_dir,
-            )
-            # prop1_and_prop2_u_prop3
-            if len(benchmark_frame.proposition) > 2:
-                label = benchmark_frame.proposition
-                prop1 = random.choice(label.pop(label.index(unique_prop)))
-                prop2 = random.choice(label.pop(label.index(prop1)))
-                (
-                    ltl_formula,
-                    new_prop_set,
-                    frames_of_interest,
-                ) = self.prop1_and_prop2_u_prop3(
-                    prop1=prop1,
-                    prop2=prop2,
-                    prop3=unique_prop,
-                    lst=benchmark_frame.labels_of_frames,
+
+            # F prop
+            # if unique props shows up too early, F prop
+            if self.evaluate_unique_prop(
+                unique_prop,
+                benchmark_frame.labels_of_frames[:unique_prop_threshold],
+            ):
+                ltl_formula, new_prop_set, frames_of_interest = self.f_prop1(
+                    prop1=unique_prop, lst=benchmark_frame.labels_of_frames
                 )
                 self.update_and_save_benchmark_frame(
                     ltl_formula,
@@ -254,6 +227,52 @@ class RealTLVGenerator(DataGenerator):
                     benchmark_frame,
                     self._save_dir,
                 )
+            else:
+                # prop1 u prop2
+                label = benchmark_frame.proposition.copy()
+                if unique_prop in label:
+                    label.pop(label.index(unique_prop))
+                    (
+                        ltl_formula,
+                        new_prop_set,
+                        frames_of_interest,
+                    ) = self.prop1_u_prop2(
+                        prop1=random.choice(label),
+                        prop2=unique_prop,
+                        lst=benchmark_frame.labels_of_frames,
+                    )
+                    self.update_and_save_benchmark_frame(
+                        ltl_formula,
+                        new_prop_set,
+                        frames_of_interest,
+                        benchmark_frame,
+                        self._save_dir,
+                    )
+                # prop1_and_prop2_u_prop3
+                if len(benchmark_frame.proposition) > 2:
+                    label = benchmark_frame.proposition.copy()
+                    if unique_prop in label:
+                        label.pop(label.index(unique_prop))
+                        prop1 = random.choice(label)
+                        label.pop(label.index(prop1))
+                        prop2 = random.choice(label)
+                        (
+                            ltl_formula,
+                            new_prop_set,
+                            frames_of_interest,
+                        ) = self.prop1_and_prop2_u_prop3(
+                            prop1=prop1,
+                            prop2=prop2,
+                            prop3=unique_prop,
+                            lst=benchmark_frame.labels_of_frames,
+                        )
+                        self.update_and_save_benchmark_frame(
+                            ltl_formula,
+                            new_prop_set,
+                            frames_of_interest,
+                            benchmark_frame,
+                            self._save_dir,
+                        )
 
     def label_mapping_function(self, lst):
         new_label = []
@@ -278,7 +297,7 @@ class RealTLVGenerator(DataGenerator):
         benchmark_frame: TLVDataset,
         save_dir,
     ):
-        file_name = f"benchmark_waymo_ltl_{ltl_formula}_{len(benchmark_frame.images_of_frames)}_0.pkl"
+        file_name = f"benchmark_{self._dataloader.name}_ltl_{ltl_formula}_{len(benchmark_frame.images_of_frames)}_{uuid.uuid4()}.pkl"
         benchmark_frame_ = copy.deepcopy(benchmark_frame)
         benchmark_frame_.frames_of_interest = frames_of_interest
         benchmark_frame_.ltl_formula = ltl_formula

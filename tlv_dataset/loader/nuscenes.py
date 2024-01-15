@@ -7,7 +7,8 @@ from nuscenes.nuscenes import NuScenes
 
 from tlv_dataset.common.utility import save_dict_to_pickle
 from tlv_dataset.data import TLVDataset
-from tlv_dataset.label_mapper.metadata.nuscenes_to_coco import MAPPER_METADATA
+
+MAPPER_METADATA = None
 
 
 class NuScenesImageLoader:
@@ -18,13 +19,18 @@ class NuScenesImageLoader:
         dataroot: str,
         version: str = "v1.0-mini",
         verbose: bool = False,
+        mapping_to: str = "coco",
     ):
         self.name = "NuScenes"
-        self._nusc = NuScenes(
-            version=version, dataroot=dataroot, verbose=verbose
-        )
+        if mapping_to is not None:
+            global MAPPER_METADATA
+            if mapping_to == "coco":
+                from tlv_dataset.label_mapper.metadata.nuscenes_to_coco import (
+                    MAPPER_METADATA,
+                )
+        self._nusc = NuScenes(version=version, dataroot=dataroot, verbose=verbose)
         self._nuscene: list = self._nusc.scene
-        self._scene_data = self.loading_data(self._nuscene)
+        # self._scene_data = self.loading_data(self._nuscene)
 
     def get_label_count(self, lst):
         output = {}
@@ -45,7 +51,7 @@ class NuScenesImageLoader:
         return output
 
     def map_label(self, nuscenes_label):
-        return LABEL_MAPPING.get(
+        return MAPPER_METADATA.get(
             nuscenes_label, None
         )  # Returns None if no mapping exists
 
@@ -59,7 +65,7 @@ class NuScenesImageLoader:
         return list(set(labels))
 
     def convert_to_tlv_dataset(self, raw_data: any):
-        benchmark_frame = TLVDataset(
+        return TLVDataset(
             ground_truth=True,
             ltl_formula="",
             proposition=[],
@@ -81,27 +87,20 @@ class NuScenesImageLoader:
             for data in self._nusc.sample:
                 if scene_token == data["scene_token"]:
                     front_cam_frame = cv2.imread(
-                        self._nusc.get_sample_data_path(
-                            data["data"]["CAM_FRONT"]
-                        )
+                        self._nusc.get_sample_data_path(data["data"]["CAM_FRONT"])
                     )
-                    # print(len(data["anns"]))
                     labels = self.parse_object_class(data["anns"])
                     # cv2.imwrite("test__.png", front_cam_frame)
                     if front_cam_frame is not None:
                         scene_data[scene_token]["images_of_frame"].append(
                             front_cam_frame
                         )
-                        scene_data[scene_token]["labels_of_frame"].append(
-                            labels
-                        )
+                        scene_data[scene_token]["labels_of_frame"].append(labels)
                     else:
                         data_validation = False
             if data_validation:
                 if generate_func is not None:
-                    generate_func(
-                        self.convert_to_tlv_dataset(scene_data[scene_token])
-                    )
+                    generate_func(self.convert_to_tlv_dataset(scene_data[scene_token]))
             else:
                 save_dict_to_pickle(
                     dict_obj=scene_data[scene_token],
@@ -308,7 +307,7 @@ class NuScenesImageLoader:
 
 
 if __name__ == "__main__":
-    test = NuSceneImageLoader(
+    test = NuScenesImageLoader(
         version="v1.0-trainval",
         dataroot="/opt/Neuro-Symbolic-Video-Frame-Search/store/datasets/NUSCENES/train",
         save_dir="/opt/Neuro-Symbolic-Video-Frame-Search/store/nsvs_artifact/nuscene_video",

@@ -1,6 +1,8 @@
 from __future__ import annotations
-from tlv_dataset.data import TLVRawImage
+
 import abc
+
+from tlv_dataset.data import TLVRawImage
 
 
 class DataLoader(abc.ABC):
@@ -20,3 +22,7 @@ class TLVImageLoader(DataLoader):
     @abc.abstractmethod
     def process_data(self, raw_data) -> any:
         """Process raw data to BenchmarkRawImage Data Class."""
+
+    @abc.abstractmethod
+    def map_data(self, **kwargs) -> any:
+        """Map data to another dataset."""

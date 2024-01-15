@@ -1,5 +1,9 @@
 # Python-Project-Template
 
+Data Source
+1. [ImageNet](https://image-net.org/challenges/LSVRC/2017/index.php): The ImageNet Large Scale Visual Recognition Challenge (ILSVRC) 2017
+
+
 This is a template repository. Please initialize your python project using this template.
 
 1. Make sure you have a right python version installed locally and change the version of python from the files below
