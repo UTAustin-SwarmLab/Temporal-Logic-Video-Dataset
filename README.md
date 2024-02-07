@@ -122,9 +122,9 @@ Please find argument details from run scripts.
 * `number_video_per_set_of_frame`: Number of videos to generate per set of frames.
 * `increase_rate`: Rate at which the number of frames increases.
 * `ltl_logic`: Temporal logic to apply. Options include various logical expressions like "F prop1", "G prop1", etc.
-* `save_frames`: Boolean to decide whether to save individual frames (True or False).
-In each run script, make sure 
+* `save_images`: Boolean to decide whether to save individual frame images (True or False).
 
+In each run script, make sure 
 1. **coco synthetic data generator** <br>
 COCO synthetic data generator can generate & compositions since it has multiple labels.
 ```

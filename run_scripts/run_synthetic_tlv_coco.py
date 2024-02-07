@@ -65,7 +65,7 @@ if __name__ == "__main__":
         ],
     )
     parser.add_argument(
-        "--save_frames",
+        "--save_images",
         type=bool,
         default=False,
     )
@@ -97,5 +97,5 @@ if __name__ == "__main__":
             number_video_per_set_of_frame=args.number_video_per_set_of_frame,
             increase_rate=args.increase_rate,
             ltl_logic=tl,
-            save_frames=args.save_frames,
+            save_images=args.save_frames,
         )

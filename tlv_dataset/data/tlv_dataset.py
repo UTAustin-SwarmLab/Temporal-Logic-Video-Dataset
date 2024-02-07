@@ -1,15 +1,10 @@
 import dataclasses  # noqa: D100
-import random
-from pathlib import Path
-from typing import Dict, List, Optional
+from typing import List, Optional
 
-import cv2
 import numpy as np
-import torch
 from PIL import Image
 
 from tlv_dataset.common.frame_grouping import combine_consecutive_lists
-from tlv_dataset.common.utility import get_file_or_dir_with_datetime
 
 
 @dataclasses.dataclass
@@ -48,12 +43,11 @@ class TLVDataset:
         Args:
         path (str, optional): Path to save image.
         """
-        from PIL import Image
 
         for idx, img in enumerate(self.images_of_frames):
             Image.fromarray(img).save(f"{path}/{idx}.png")
 
-    def save(
+    def save_as_class(
         self,
         save_path: str = "/opt/Neuro-Symbolic-Video-Frame-Search/artifacts",
     ) -> None:
@@ -63,3 +57,24 @@ class TLVDataset:
         """Save the current instance to a pickle file."""
         with open(save_path, "wb") as f:
             pickle.dump(self, f)
+
+    def save_as_dict(
+        self,
+        save_path: str = "/opt/Neuro-Symbolic-Video-Frame-Search/artifacts",
+    ) -> None:
+        """Save the current instance to a pickle file."""
+        import pickle
+
+        dict_format = dict(
+            ground_truth=self.ground_truth,
+            ltl_formula=self.ltl_formula,
+            proposition=self.proposition,
+            number_of_frame=self.number_of_frame,
+            frames_of_interest=self.frames_of_interest,
+            labels_of_frames=self.labels_of_frames,
+            images_of_frames=self.images_of_frames,
+        )
+
+        """Save the current instance to a pickle file."""
+        with open(save_path, "wb") as f:
+            pickle.dump(dict_format, f)

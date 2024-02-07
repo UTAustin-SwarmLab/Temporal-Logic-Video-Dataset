@@ -23,8 +23,8 @@ class SyntheticTLVGenerator(DataGenerator):
         Args:
             dataloader (TLVImageLoader): Image data loader.
         """
-        self._data_loader = dataloader
-        self.data = self._data_loader.data
+        self.data_loader = dataloader
+        self.data = self.data_loader.data
         self._save_dir = Path(save_dir)
         self._save_dir.mkdir(parents=True, exist_ok=True)
 
@@ -78,7 +78,8 @@ class SyntheticTLVGenerator(DataGenerator):
         ltl_logic: str = "F prop1",
         temporal_property: str = "",
         conditional_property: str = "",
-        save_frames: bool = False,
+        save_images: bool = False,
+        save_as: str = "dict",  # class
     ) -> any:
         """Generate data."""
         number_frame = initial_number_of_frame
@@ -122,13 +123,19 @@ class SyntheticTLVGenerator(DataGenerator):
                     proposition=ltl_frame.proposition,
                 )
                 self.extract_properties(ltl_frame.ltl_formula)
-                ltl_frame.save(
-                    save_path=self._save_dir
-                    / f"benchmark_{self._data_loader.name}_ltl_{ltl_frame.ltl_formula}_{number_frame}_{video_idx}.pkl"
-                )
+                if save_as == "dict":
+                    ltl_frame.save_as_dict(
+                        save_path=self._save_dir
+                        / f"benchmark_{self.data_loader.name}_ltl_{ltl_frame.ltl_formula}_{number_frame}_{video_idx}.pkl"
+                    )
+                else:
+                    ltl_frame.save_as_class(
+                        save_path=self._save_dir
+                        / f"benchmark_{self.data_loader.name}_ltl_{ltl_frame.ltl_formula}_{number_frame}_{video_idx}.pkl"
+                    )
 
             number_frame += increase_rate
-        if save_frames:
+        if save_images:
             ltl_frame.save_frames()
 
     def generate_until_time_delta(
@@ -139,7 +146,8 @@ class SyntheticTLVGenerator(DataGenerator):
         increase_rate: int = 1,
         ltl_logic: str = "prop1 U prop2",
         present_prop1_till_prop2: bool = False,
-        save_frames: bool = False,
+        save_images: bool = False,
+        save_as: str = "dict",  # class
     ) -> any:
         """Generate data."""
         number_frame = initial_number_of_frame
@@ -184,13 +192,19 @@ class SyntheticTLVGenerator(DataGenerator):
                     proposition=ltl_frame.proposition,
                 )
                 self.extract_properties(ltl_frame.ltl_formula)
-                ltl_frame.save(
-                    save_path=self._save_dir
-                    / f"timedelta_{number_frame - (initial_number_of_frame - 1)}_benchmark_{self._data_loader.name}_ltl_{ltl_frame.ltl_formula}_{number_frame}_{video_idx}.pkl"
-                )
+                if save_as == "dict":
+                    ltl_frame.save_as_dict(
+                        save_path=self._save_dir
+                        / f"benchmark_{self.data_loader.name}_ltl_{ltl_frame.ltl_formula}_{number_frame}_{video_idx}.pkl"
+                    )
+                else:
+                    ltl_frame.save_as_class(
+                        save_path=self._save_dir
+                        / f"benchmark_{self.data_loader.name}_ltl_{ltl_frame.ltl_formula}_{number_frame}_{video_idx}.pkl"
+                    )
 
             number_frame += increase_rate
-        if save_frames:
+        if save_images:
             ltl_frame.save_frames()
 
     def generate_unique_random_indices_within_range(self, start, end):
