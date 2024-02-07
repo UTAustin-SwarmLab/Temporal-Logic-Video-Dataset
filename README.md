@@ -80,9 +80,23 @@ To get a local copy up and running follow these simple example steps.
 
 If you want to generate syntetic dataset from COCO and ImageNet, you should download the source data first. 
 
-1. [ImageNet](https://image-net.org/challenges/LSVRC/2017/index.php): The ImageNet Large Scale Visual Recognition Challenge (ILSVRC) 2017
+1. [ImageNet](https://image-net.org/challenges/LSVRC/2017/index.php): The ImageNet Large Scale Visual Recognition Challenge (ILSVRC) 2017. Recommended file structure as follows: 
+```
+|--ILSVRC
+|----Annotations
+|----Data
+|----ImageSets
+|----LOC_synset_mapping.txt
+```
 
-2. [COCO](google.com): TODO
+2. [COCO](https://cocodataset.org/#download): Download the source data as follow:
+```
+|--COCO
+|----2017
+|------annotations
+|------train2017
+|------val2017
+```
 
 ### Installation
 ```
@@ -94,11 +108,34 @@ python -m pip install --editable ."[dev, test]"
    
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 <!-- USAGE EXAMPLES -->
 ## Usage
+Please find argument details from run scripts. 
 
-TBD
+### Data Loader Common Argument
+* `data_root_dir`: The root directory where the COCO dataset is stored.
+* `mapping_to`: Map the original label to desired mapper, default is "coco".
+* `save_dir`: Directory where the generated dataset will be saved.
+### Synthetic Generator Common Argument
+* `initial_number_of_frame`: Initial number of frames for each video.
+* `max_number_frame`: Maximum number of frames for each video.
+* `number_video_per_set_of_frame`: Number of videos to generate per set of frames.
+* `increase_rate`: Rate at which the number of frames increases.
+* `ltl_logic`: Temporal logic to apply. Options include various logical expressions like "F prop1", "G prop1", etc.
+* `save_frames`: Boolean to decide whether to save individual frames (True or False).
+In each run script, make sure 
+
+1. coco synthetic data generator
+COCO synthetic data generator can generate & compositions since it has multiple labels.
+```
+python3 run_scripts/run_synthetic_tlv_coco.py --data_root_dir "../COCO/2017" --save_dir "<output dir path>"
+```
+
+2. Imagenet synthetic data generator
+Imagenet synthetic data generator cannot generate & LTL logic formula.
+```
+python3 run_synthetic_tlv_imagenet.py --data_root_dir "../ILSVRC" --save_dir "<output dir path>""
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
