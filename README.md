@@ -125,13 +125,13 @@ Please find argument details from run scripts.
 * `save_frames`: Boolean to decide whether to save individual frames (True or False).
 In each run script, make sure 
 
-1. coco synthetic data generator
+1. **coco synthetic data generator** <br>
 COCO synthetic data generator can generate & compositions since it has multiple labels.
 ```
 python3 run_scripts/run_synthetic_tlv_coco.py --data_root_dir "../COCO/2017" --save_dir "<output dir path>"
 ```
 
-2. Imagenet synthetic data generator
+2. **Imagenet synthetic data generator** <br>
 Imagenet synthetic data generator cannot generate & LTL logic formula.
 ```
 python3 run_synthetic_tlv_imagenet.py --data_root_dir "../ILSVRC" --save_dir "<output dir path>""
