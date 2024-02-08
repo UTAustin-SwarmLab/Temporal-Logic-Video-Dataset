@@ -126,12 +126,12 @@ class SyntheticTLVGenerator(DataGenerator):
                 if save_as == "dict":
                     ltl_frame.save_as_dict(
                         save_path=self._save_dir
-                        / f"benchmark_{self.data_loader.name}_ltl_{ltl_frame.ltl_formula}_{number_frame}_{video_idx}.pkl"
+                        / f"tlv_dataset_{self.data_loader.name}_ltl_{ltl_frame.ltl_formula}_{number_frame}_{video_idx}.pkl"
                     )
                 else:
                     ltl_frame.save_as_class(
                         save_path=self._save_dir
-                        / f"benchmark_{self.data_loader.name}_ltl_{ltl_frame.ltl_formula}_{number_frame}_{video_idx}.pkl"
+                        / f"tlv_dataset_{self.data_loader.name}_ltl_{ltl_frame.ltl_formula}_{number_frame}_{video_idx}.pkl"
                     )
 
             number_frame += increase_rate
@@ -195,12 +195,12 @@ class SyntheticTLVGenerator(DataGenerator):
                 if save_as == "dict":
                     ltl_frame.save_as_dict(
                         save_path=self._save_dir
-                        / f"benchmark_{self.data_loader.name}_ltl_{ltl_frame.ltl_formula}_{number_frame}_{video_idx}.pkl"
+                        / f"tlv_dataset_{self.data_loader.name}_ltl_{ltl_frame.ltl_formula}_{number_frame}_{video_idx}.pkl"
                     )
                 else:
                     ltl_frame.save_as_class(
                         save_path=self._save_dir
-                        / f"benchmark_{self.data_loader.name}_ltl_{ltl_frame.ltl_formula}_{number_frame}_{video_idx}.pkl"
+                        / f"tlv_dataset_{self.data_loader.name}_ltl_{ltl_frame.ltl_formula}_{number_frame}_{video_idx}.pkl"
                     )
 
             number_frame += increase_rate
