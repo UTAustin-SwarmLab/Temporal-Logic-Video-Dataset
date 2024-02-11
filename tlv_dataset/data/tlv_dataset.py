@@ -35,6 +35,16 @@ class TLVDataset:
             data=self.frames_of_interest
         )
 
+    def sanity_check(self):
+        """Sanity check."""
+        _labels_of_frames = []
+        for label in self.labels_of_frames:
+            if isinstance(label, str):
+                _labels_of_frames.append([label])
+            else:
+                _labels_of_frames.append(label)
+        self.labels_of_frames = _labels_of_frames
+
     def save_frames(
         self, path="/opt/Neuro-Symbolic-Video-Frame-Search/artifacts"
     ) -> None:

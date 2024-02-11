@@ -123,6 +123,8 @@ class SyntheticTLVGenerator(DataGenerator):
                     proposition=ltl_frame.proposition,
                 )
                 self.extract_properties(ltl_frame.ltl_formula)
+                # sanity check
+                ltl_frame.sanity_check()
                 if save_as == "dict":
                     ltl_frame.save_as_dict(
                         save_path=self._save_dir
@@ -192,6 +194,7 @@ class SyntheticTLVGenerator(DataGenerator):
                     proposition=ltl_frame.proposition,
                 )
                 self.extract_properties(ltl_frame.ltl_formula)
+                ltl_frame.sanity_check()
                 if save_as == "dict":
                     ltl_frame.save_as_dict(
                         save_path=self._save_dir
@@ -455,9 +458,11 @@ class SyntheticTLVGenerator(DataGenerator):
                         if x not in temp_frames_of_interest
                     ]
 
-            # 2. G "prop1"
-
         # TODO: Make a false case
+        # for i, label in enumerate(labels_of_frame):
+        #     if isinstance(label, str):
+        #         labels_of_frame[i] = [label]
+
         return TLVDataset(
             ground_truth=True,
             ltl_formula=ltl_formula,

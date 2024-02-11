@@ -24,7 +24,7 @@ if __name__ == "__main__":
         type=str,
         default="",
     )
-    # - - - - - - Image Loader Arguement - - - - - - #
+    # - - - - - - Image Loader Argument - - - - - - #
     parser.add_argument(
         "--coco_image_source",
         type=str,
