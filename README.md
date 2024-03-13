@@ -10,7 +10,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/UTAustin-SwarmLab/temporal-logic-video-dataset">
+  <a href="https://github.com/anoymouslab/temporal-logic-video-dataset">
     <img src="images/logo.png" alt="Logo" width="240" height="240">
   </a>
 
@@ -19,14 +19,14 @@
   <p align="center">
     Synthetic and real video dataset with temporal logic annotation
     <br />
-    <a href="https://github.com/UTAustin-SwarmLab/temporal-logic-video-dataset"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/anoymouslab/temporal-logic-video-dataset"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/UTAustin-SwarmLab/temporal-logic-video-dataset">View Demo</a>
+    <a href="https://github.com/anoymouslab/temporal-logic-video-dataset">View Demo</a>
     ·
-    <a href="https://github.com/UTAustin-SwarmLab/temporal-logic-video-dataset/issues">Report Bug</a>
+    <a href="https://github.com/anoymouslab/temporal-logic-video-dataset/issues">Report Bug</a>
     ·
-    <a href="https://github.com/UTAustin-SwarmLab/temporal-logic-video-dataset">Request Feature</a>
+    <a href="https://github.com/anoymouslab/temporal-logic-video-dataset">Request Feature</a>
   </p>
 </div>
 
@@ -178,7 +178,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Minkyu Choi - [@your_twitter](https://twitter.com/MinkyuChoi7) - minkyu.choi@utexas.edu
+Anonymous Authors- [@your_twitter](https://twitter.com) - anoymousu1@gmail.com
 
 Project Link: TBD
 
@@ -189,8 +189,8 @@ Project Link: TBD
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* University of Texas at Austin (UT Austin)
-* UT Austin Swarm Lab
+* Anonymous Institution 
+* Anonymous Lab
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -199,15 +199,15 @@ Project Link: TBD
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/UTAustin-SwarmLab/temporal-logic-video-dataset/graphs/contributors
+[contributors-url]: https://github.com/anoymouslab/temporal-logic-video-dataset/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/UTAustin-SwarmLab/temporal-logic-video-dataset/network/members
+[forks-url]: https://github.com/anoymouslab/temporal-logic-video-dataset/network/members
 [stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
-[stars-url]: https://github.com/UTAustin-SwarmLab/temporal-logic-video-dataset/stargazers
+[stars-url]: https://github.com/anoymouslab/temporal-logic-video-dataset/stargazers
 [issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
-[issues-url]: https://github.com/UTAustin-SwarmLab/temporal-logic-video-dataset/issues
+[issues-url]: https://github.com/anoymouslab/temporal-logic-video-dataset/issues
 [license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/UTAustin-SwarmLab/temporal-logic-video-dataset/blob/master/LICENSE.txt
+[license-url]: https://github.com/anoymouslab/temporal-logic-video-dataset/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/mchoi07/
 [product-screenshot]: images/screenshot.png

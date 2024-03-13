@@ -12,7 +12,7 @@ namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
 name = "tlv_dataset"
 version = "1.0.0"
 authors = [
-  { name="Minkyu Choi", email="minkyu.choi@utexas.edu" },
+  { name="Anonymous Authors", email="anoymousu1@gmail.com" },
 ]
 description = "Temporal Logic Video (TLV) Dataset"
 readme = "README.md"
@@ -37,8 +37,8 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/UTAustin-SwarmLab/temporal-logic-vedio-dataset"
-"Bug Tracker" = "https://github.com/UTAustin-SwarmLab/temporal-logic-vedio-dataset/issues"
+"Homepage" = ""
+"Bug Tracker" = ""
 
 [project.optional-dependencies]
 dev = ["black", "ruff", "mypy"]
