@@ -51,7 +51,9 @@ class RealTLVGenerator(DataGenerator):
                 benchmark_frame: TLVDataset = load_pickle_to_dict(file)
                 self.generate_ltl_ground_truth(benchmark_frame)
         else:
-            self._dataloader.loading_data(generate_func=self.generate_ltl_ground_truth)
+            self._dataloader.loading_data(
+                generate_func=self.generate_ltl_ground_truth
+            )
 
     def get_label_count(self, lst):
         output = Counter()

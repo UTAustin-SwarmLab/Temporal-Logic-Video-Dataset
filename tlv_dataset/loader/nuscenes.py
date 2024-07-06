@@ -28,7 +28,9 @@ class NuScenesImageLoader:
                 from tlv_dataset.label_mapper.metadata.nuscenes_to_coco import (
                     MAPPER_METADATA,
                 )
-        self._nusc = NuScenes(version=version, dataroot=dataroot, verbose=verbose)
+        self._nusc = NuScenes(
+            version=version, dataroot=dataroot, verbose=verbose
+        )
         self._nuscene: list = self._nusc.scene
         # self._scene_data = self.loading_data(self._nuscene)
 
@@ -87,7 +89,9 @@ class NuScenesImageLoader:
             for data in self._nusc.sample:
                 if scene_token == data["scene_token"]:
                     front_cam_frame = cv2.imread(
-                        self._nusc.get_sample_data_path(data["data"]["CAM_FRONT"])
+                        self._nusc.get_sample_data_path(
+                            data["data"]["CAM_FRONT"]
+                        )
                     )
                     labels = self.parse_object_class(data["anns"])
                     # cv2.imwrite("test__.png", front_cam_frame)
@@ -95,12 +99,16 @@ class NuScenesImageLoader:
                         scene_data[scene_token]["images_of_frame"].append(
                             front_cam_frame
                         )
-                        scene_data[scene_token]["labels_of_frame"].append(labels)
+                        scene_data[scene_token]["labels_of_frame"].append(
+                            labels
+                        )
                     else:
                         data_validation = False
             if data_validation:
                 if generate_func is not None:
-                    generate_func(self.convert_to_tlv_dataset(scene_data[scene_token]))
+                    generate_func(
+                        self.convert_to_tlv_dataset(scene_data[scene_token])
+                    )
             else:
                 save_dict_to_pickle(
                     dict_obj=scene_data[scene_token],

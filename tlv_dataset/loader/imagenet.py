@@ -102,7 +102,9 @@ class ImageNetDS(Dataset):
             class_id = 0
             while (
                 index
-                >= self._num_images_per_class[self.mapping_number_to_class[class_id]]
+                >= self._num_images_per_class[
+                    self.mapping_number_to_class[class_id]
+                ]
             ):
                 index -= self._num_images_per_class[
                     self.mapping_number_to_class[class_id]
@@ -123,15 +125,21 @@ class ImageNetDS(Dataset):
         else:
             # Obtain the metaclass where the index is located
             metaclass_id = 0
-            metaclassname = list(self.metaclass_imagenetclass.keys())[metaclass_id]
+            metaclassname = list(self.metaclass_imagenetclass.keys())[
+                metaclass_id
+            ]
             cum_count = 0
             while index >= self._num_images_per_metaclass[metaclassname]:
                 index -= self._num_images_per_metaclass[metaclassname]
                 cum_count += self._num_images_per_metaclass[metaclassname]
                 metaclass_id += 1
-                metaclassname = list(self.metaclass_imagenetclass.keys())[metaclass_id]
+                metaclassname = list(self.metaclass_imagenetclass.keys())[
+                    metaclass_id
+                ]
 
-            imagenet_class_for_metaclass = self.metaclass_imagenetclass[metaclassname]
+            imagenet_class_for_metaclass = self.metaclass_imagenetclass[
+                metaclassname
+            ]
             index = index_copy - cum_count
 
             class_id_val = 0
@@ -264,7 +272,9 @@ class ImageNetDataloader(TLVImageLoader):
         self.imagenet = ImageNetDS(imagenet_dir_path, is_mapping=is_mapping)
         # Get text labels from metadata
         self.class_labels = list(self.imagenet.classnames)
-        self.data: TLVRawImageDataset = self.process_data(raw_data=self.load_data())
+        self.data: TLVRawImageDataset = self.process_data(
+            raw_data=self.load_data()
+        )
 
     def load_data(self) -> dict:
         """Load the labels of the data
@@ -274,7 +284,9 @@ class ImageNetDataloader(TLVImageLoader):
         labels = [0 for _ in range(len(self.imagenet))]
         mapped_labels = [0 for _ in range(len(self.imagenet))]
         cum_count = 0
-        for idx, (class_, count) in enumerate(self.imagenet.class_counts.items()):
+        for idx, (class_, count) in enumerate(
+            self.imagenet.class_counts.items()
+        ):
             cum_count += count
             for j in range(cum_count - count, cum_count):
                 labels[j] = idx

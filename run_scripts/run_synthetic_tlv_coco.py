@@ -78,7 +78,9 @@ if __name__ == "__main__":
         coco_image_source=args.coco_image_source,
     )
 
-    TLV_generator = SyntheticTLVGenerator(dataloader=dataloader, save_dir=args.save_dir)
+    TLV_generator = SyntheticTLVGenerator(
+        dataloader=dataloader, save_dir=args.save_dir
+    )
 
     if args.ltl_logic == "all":
         available_tl = [

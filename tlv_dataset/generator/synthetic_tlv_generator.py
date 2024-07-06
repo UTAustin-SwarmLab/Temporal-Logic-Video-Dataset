@@ -327,15 +327,15 @@ class SyntheticTLVGenerator(DataGenerator):
             else:
                 proposition_set = [proposition_1, proposition_2]
             if temporal_property == "U":
-                assert proposition_2 is not None, "proposition 2 must be not None"
+                assert (
+                    proposition_2 is not None
+                ), "proposition 2 must be not None"
                 u_index = logic_component.index("U")
                 pre_u_index = logic_component[u_index - 1]
                 post_u_index = logic_component[u_index + 1]
                 if post_u_index == "prop2":
                     # TODO: F & G...
-                    ltl_formula = (
-                        f'"{proposition_1}" {temporal_property} "{proposition_2}"'
-                    )
+                    ltl_formula = f'"{proposition_1}" {temporal_property} "{proposition_2}"'
                     post_u_label_idx = []
                     for idx in list(set(random_frame_idx_selection)):
                         temp_frames_of_interest.append(idx)
@@ -349,7 +349,9 @@ class SyntheticTLVGenerator(DataGenerator):
                                 post_u_label_idx.append(prop2_idx)
                                 labels_of_frame[prop2_idx] = proposition_2
                         else:
-                            prop2_idx = random.randrange(idx + 1, number_of_frame - 1)
+                            prop2_idx = random.randrange(
+                                idx + 1, number_of_frame - 1
+                            )
                             temp_frames_of_interest.append(prop2_idx)
                             post_u_label_idx.append(prop2_idx)
                             labels_of_frame[prop2_idx] = proposition_2
@@ -386,7 +388,9 @@ class SyntheticTLVGenerator(DataGenerator):
                                 post_u_label_idx.append(prop3_idx)
                                 labels_of_frame[prop3_idx] = proposition_3
                         else:
-                            prop3_idx = random.randrange(idx + 1, number_of_frame - 1)
+                            prop3_idx = random.randrange(
+                                idx + 1, number_of_frame - 1
+                            )
                             temp_frames_of_interest.append(prop3_idx)
                             post_u_label_idx.append(prop3_idx)
                             labels_of_frame[prop3_idx] = proposition_3
@@ -423,9 +427,7 @@ class SyntheticTLVGenerator(DataGenerator):
                 assert (
                     conditional_property == "!"
                 ), "conditional_property must be ! with one proposition"
-                ltl_formula = (
-                    f'{temporal_property} {conditional_property} "{proposition_1}"'
-                )
+                ltl_formula = f'{temporal_property} {conditional_property} "{proposition_1}"'
             # 1. F "prop1"
             frame_index = []
             if temporal_property == "F":

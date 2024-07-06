@@ -74,7 +74,9 @@ if __name__ == "__main__":
         batch_id=args.batch_id,
     )
 
-    TLV_generator = SyntheticTLVGenerator(dataloader=dataloader, save_dir=args.save_dir)
+    TLV_generator = SyntheticTLVGenerator(
+        dataloader=dataloader, save_dir=args.save_dir
+    )
 
     TLV_generator.generate_until_time_delta(
         initial_number_of_frame=args.initial_number_of_frame,

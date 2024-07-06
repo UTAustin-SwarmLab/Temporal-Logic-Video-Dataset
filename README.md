@@ -1,12 +1,10 @@
 # Temporal Logic Video (TLV) Dataset
 
-<div align="center">
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![MIT License][license-shield]][license-url]
-</div>
 
+| [![Contributors][contributors-shield]][contributors-url] | [![Forks][forks-shield]][forks-url] | [![Stargazers][stars-shield]][stars-url] | [![MIT License][license-shield]][license-url] |
+|:--:|:--:|:--:|:--:|
+
+## Overview
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -86,12 +84,42 @@ Each serialized object contains the following attributes:
 
 You can download a dataset from here. The structure of dataset is as follows: serializer
    ```
-   ILSVRC/
-   ├── Annotations/
-   ├── Data/
-   ├── ImageSets/
-   └── LOC_synset_mapping.txt
+   tlv-dataset-v1/
+   ├── tlv_real_dataset/
+   ├──── prop1Uprop2/
+   ├──── (prop1&prop2)Uprop3/
+   ├── tlv_synthetic_dataset/
+   ├──── Fprop1/
+   ├──── Gprop1/
+   ├──── prop1&prop2/
+   ├──── prop1Uprop2/
+   └──── (prop1&prop2)Uprop3/
    ```
+#### Dataset Statistics
+1. Total Number of Frames
+
+| Ground Truth TL Specifications | Synthetic TLV Dataset | | Real TLV Dataset | |
+| --- | ---: | ---: | ---: | ---: |
+| | COCO | ImageNet | Waymo | Nuscenes |
+|---|---|---|---|---|
+| Eventually Event A | - | 15,750 | - | - |
+| Always Event A | - | 15,750 | - | - |
+| Event A And Event B | 31,500 | - | - | - |
+| Event A Until Event B | 15,750 | 15,750 | 8,736 | 19,808 |
+| (Event A And Event B) Until Event C | 5,789 | - | 7,459 | 7,459 |
+
+2. Total Number of datasets
+
+| Ground Truth TL Specifications | Synthetic TLV Dataset | | Real TLV Dataset | |
+| --- | ---: | ---: | ---: | ---: |
+| | COCO | ImageNet | Waymo | Nuscenes |
+|---|---|---|---|---|
+| Eventually Event A | - | 60 | - | - |
+| Always Event A | - | 60 | - | - |
+| Event A And Event B | 120 | - | - | - |
+| Event A Until Event B | 60| 60 | 45| 494 |
+| (Event A And Event B) Until Event C | 97 | - | 30 | 186|
+
 
 ## Installation
 

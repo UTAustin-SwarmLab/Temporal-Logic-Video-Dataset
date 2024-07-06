@@ -52,8 +52,13 @@ def ungroup_row(
 
 
 def load_data_set_parquet(
-    config: omegaconf, context_name: str, validation=False, context_frames: List = None
-) -> Tuple[List[open_dataset.CameraImage], List[open_dataset.CameraSegmentationLabel]]:
+    config: omegaconf,
+    context_name: str,
+    validation=False,
+    context_frames: List = None,
+) -> Tuple[
+    List[open_dataset.CameraImage], List[open_dataset.CameraSegmentationLabel]
+]:
     """Load datset from parquet files for segmentation and camera images
 
     Args:
@@ -94,7 +99,9 @@ def load_data_set_parquet(
 
     cam_box_list = []
     image_list = []
-    for i, (key_values, r) in enumerate(cam_segmentation_per_frame_df.iterrows()):
+    for i, (key_values, r) in enumerate(
+        cam_segmentation_per_frame_df.iterrows()
+    ):
         # Read three sequences of 5 camera images for this demo.
         # Store a segmentation label component for each camera.
         cam_box_list.append(
@@ -244,7 +251,9 @@ class WaymoImageLoader(Dataset):
                 context_frame = line.strip().split(",")[1]
                 self.context_set.add(context_name)
                 if self.context_count.get(context_name) is None:
-                    self.context_count[context_name] = {(j + 1): 0 for j in range(5)}
+                    self.context_count[context_name] = {
+                        (j + 1): 0 for j in range(5)
+                    }
                 camera_ids = []
                 available_camera_ids = line.strip().split(",")[2:-1]
                 for camera_id in available_camera_ids:
@@ -296,7 +305,13 @@ class WaymoImageLoader(Dataset):
             "static": [102, 102, 102],
         }
 
-        self.OBJECT_CLASSES = ["undefined", "vehicle", "pedestrian", "sign", "cyclist"]
+        self.OBJECT_CLASSES = [
+            "undefined",
+            "vehicle",
+            "pedestrian",
+            "sign",
+            "cyclist",
+        ]
 
         self.CLASSES = list(self.CLASSES_TO_PALLETTE.keys())
         self.PALLETE = list(self.CLASSES_TO_PALLETTE.values())
@@ -332,7 +347,9 @@ class WaymoImageLoader(Dataset):
 
         # Load all the frames from the context file
         frames_with_box, camera_images = load_data_set_parquet(
-            config=self.ds_config, context_name=context_name, validation=self.validation
+            config=self.ds_config,
+            context_name=context_name,
+            validation=self.validation,
         )
 
         class_types, _ = read_box_labels(self.ds_config, frames_with_box)
@@ -342,14 +359,18 @@ class WaymoImageLoader(Dataset):
         # All semantic labels are in the form of object indices defined by the PALLETE
         # flatten list and remvoe empty sublists
         camera_images_frame = [
-            x[camera_id - 1] for x in camera_images_frame if x[camera_id - 1] != []
+            x[camera_id - 1]
+            for x in camera_images_frame
+            if x[camera_id - 1] != []
         ]
         class_types_frame = class_types[camera_id - 1]
         class_types_frame = [x for x in class_types_frame if x != []]
 
         for i in range(len(class_types_frame)):
             for j in range(len(class_types_frame[i])):
-                class_types_frame[i][j] = self.OBJECT_CLASSES[class_types_frame[i][j]]
+                class_types_frame[i][j] = self.OBJECT_CLASSES[
+                    class_types_frame[i][j]
+                ]
             class_types_frame[i] = list(set(class_types_frame[i]))
         return camera_images_frame, class_types_frame
 

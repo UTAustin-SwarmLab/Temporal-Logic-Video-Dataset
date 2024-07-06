@@ -73,7 +73,9 @@ if __name__ == "__main__":
         coco_image_source=args.coco_image_source,
     )
 
-    TLV_generator = SyntheticTLVGenerator(dataloader=dataloader, save_dir=args.save_dir)
+    TLV_generator = SyntheticTLVGenerator(
+        dataloader=dataloader, save_dir=args.save_dir
+    )
 
     TLV_generator.generate_until_time_delta(
         initial_number_of_frame=args.initial_number_of_frame,
