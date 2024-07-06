@@ -1,8 +1,8 @@
 # Temporal Logic Video (TLV) Dataset
 
 
-| [![Contributors][contributors-shield]][contributors-url] | [![Forks][forks-shield]][forks-url] | [![Stargazers][stars-shield]][stars-url] | [![MIT License][license-shield]][license-url] |
-|:--:|:--:|:--:|:--:|
+[![Contributors][contributors-shield]][contributors-url] [![Forks][forks-shield]][forks-url] [![Stargazers][stars-shield]][stars-url] [![MIT License][license-shield]][license-url] 
+
 
 ## Overview
 <!-- PROJECT LOGO -->
@@ -101,7 +101,6 @@ You can download a dataset from here. The structure of dataset is as follows: se
 | Ground Truth TL Specifications | Synthetic TLV Dataset | | Real TLV Dataset | |
 | --- | ---: | ---: | ---: | ---: |
 | | COCO | ImageNet | Waymo | Nuscenes |
-|---|---|---|---|---|
 | Eventually Event A | - | 15,750 | - | - |
 | Always Event A | - | 15,750 | - | - |
 | Event A And Event B | 31,500 | - | - | - |
@@ -113,7 +112,6 @@ You can download a dataset from here. The structure of dataset is as follows: se
 | Ground Truth TL Specifications | Synthetic TLV Dataset | | Real TLV Dataset | |
 | --- | ---: | ---: | ---: | ---: |
 | | COCO | ImageNet | Waymo | Nuscenes |
-|---|---|---|---|---|
 | Eventually Event A | - | 60 | - | - |
 | Always Event A | - | 60 | - | - |
 | Event A And Event B | 120 | - | - | - |
