@@ -58,9 +58,10 @@ The Temporal Logic Video (TLV) Dataset addresses the scarcity of state-of-the-ar
 ## Dataset 
 <div align="center">
   <a href="https://github.com/UTAustin-SwarmLab/temporal-logic-video-dataset">
-    <img src="images/teaser.png" alt="Logo" width="240" height="240">
+    <img src="images/teaser.png" alt="Logo" width="840" height="440">
   </a>
 </div>
+
 Though we provide a source code to generate datasets from different types of data source, we release a v1 dataset as a proof of concept. 
 
 ### Dataset Structure
