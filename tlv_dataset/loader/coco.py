@@ -57,10 +57,12 @@ class COCOImageLoader(TLVImageLoader):
         """
         img_ids = self._coco.getImgIds()
         images = [
-            self._image_dir / self._coco.loadImgs(id)[0]["file_name"] for id in img_ids
+            self._image_dir / self._coco.loadImgs(id)[0]["file_name"]
+            for id in img_ids
         ]
         annotations = [
-            self._coco.loadAnns(self._coco.getAnnIds(imgIds=id)) for id in img_ids
+            self._coco.loadAnns(self._coco.getAnnIds(imgIds=id))
+            for id in img_ids
         ]
 
         return images, annotations
@@ -76,16 +78,19 @@ class COCOImageLoader(TLVImageLoader):
         for id in img_ids:
             images.append(
                 cv2.imread(
-                    str(self._image_dir / self._coco.loadImgs(id)[0]["file_name"])
+                    str(
+                        self._image_dir
+                        / self._coco.loadImgs(id)[0]["file_name"]
+                    )
                 )[:, :, ::-1]
             )  # Read it as RGB
             annotation = self._coco.loadAnns(self._coco.getAnnIds(imgIds=id))
             labels_per_image = []
             for i in range(len(annotation)):
                 labels_per_image.append(
-                    self._coco.cats[annotation[i]["category_id"]]["name"].replace(
-                        " ", "_"
-                    )
+                    self._coco.cats[annotation[i]["category_id"]][
+                        "name"
+                    ].replace(" ", "_")
                 )
             unique_labels = list(set(labels_per_image))
             if len(unique_labels) == 0:
@@ -133,10 +138,10 @@ class COCOImageLoader(TLVImageLoader):
 
 # # Example usage:
 # coco_loader = COCOImageLoader(
-#     coco_dir_path="/opt/Neuro-Symbolic-Video-Frame-Search/artifacts/data/benchmark_image_dataset/coco",
-#     annotation_file="annotations/instances_val2017.json",
-#     image_dir="val2017",
+#     coco_root_dir_path="/store/datasets/COCO/2017",
+#     coco_image_source="val",
 # )
+# breakpoint()
 
 # # Display a sample image
 # coco_loader.display_sample_image(0)
