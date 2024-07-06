@@ -62,7 +62,7 @@ The Temporal Logic Video (TLV) Dataset addresses the scarcity of state-of-the-ar
   </a>
 </div>
 
-Though we provide a source code to generate datasets from different types of data source, we release a v1 dataset as a proof of concept. 
+Though we provide a source code to generate datasets from different types of data sources, we release a dataset v1 as a proof of concept. 
 
 ### Dataset Structure
 
