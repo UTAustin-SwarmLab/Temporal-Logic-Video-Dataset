@@ -67,7 +67,7 @@ Though we provide a source code to generate datasets from different types of dat
 
 ### Dataset Structure
 
-We provide a v1 dataset as a proof of concept. The data is offered as serialized objects, each containing a set of frames with annotations.
+We provide a v1 dataset as a proof of concept. The data is offered as serialized objects, each containing a set of frames with annotations. You can download the dataset from our [dataset repository](https://huggingface.co/datasets/minkyuchoi/Temporal-Logic-Video-Dataset) in Hugging Face.
 
 #### File Naming Convention
 `\<tlv_data_type\>:source:\<datasource\>-number_of_frames:\<number_of_frames\>-\<uuid\>.pkl`
