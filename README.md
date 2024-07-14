@@ -191,7 +191,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 If you find this repo useful, please cite our paper:
 ```bibtex
 @inproceedings{Choi_2024_ECCV,
-  author={Choi, Minkyu and Goel Harsh and Omama, Mohammad and Yang, Yunhao and Shah, Sahil and Chinchali, Sandeep},
+  author={Choi, Minkyu and Goel, Harsh and Omama, Mohammad and Yang, Yunhao and Shah, Sahil and Chinchali, Sandeep},
   title={Towards Neuro-Symbolic Video Understanding},
   booktitle={Proceedings of the European Conference on Computer Vision (ECCV)},
   month={September},
