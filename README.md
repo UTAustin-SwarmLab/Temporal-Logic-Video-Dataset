@@ -187,6 +187,17 @@ Note: ImageNet generator does not support '&' LTL logic formulae.
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
+## Connect with Me
+<p align="center">
+  <em>Feel free to connect with me through these professional channels:</em>
+<p align="center">
+  <a href="https://www.linkedin.com/in/mchoi07/" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-0077B5?style=flat-square&logo=Linkedin&logoColor=white" alt="LinkedIn"/></a>
+  <a href="mailto:minkyu.choi@utexas.edu"><img src="https://img.shields.io/badge/-Email-D14836?style=flat-square&logo=Gmail&logoColor=white" alt="Email"/></a>
+  <a href="https://scholar.google.com/citations?user=ai4daB8AAAAJ&hl" target="_blank"><img src="https://img.shields.io/badge/-Google%20Scholar-4285F4?style=flat-square&logo=google-scholar&logoColor=white" alt="Google Scholar"/></a>
+  <a href="https://minkyuchoi-07.github.io" target="_blank"><img src="https://img.shields.io/badge/-Website-00C7B7?style=flat-square&logo=Internet-Explorer&logoColor=white" alt="Website"/></a>
+  <a href="https://x.com/MinkyuChoi7" target="_blank"><img src="https://img.shields.io/badge/-Twitter-1DA1F2?style=flat-square&logo=Twitter&logoColor=white" alt="Twitter"/></a>
+</p>
+
 ## Citation
 If you find this repo useful, please cite our paper:
 ```bibtex
